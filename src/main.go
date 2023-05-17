@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	account := requests.CreateNewSingleAccount("http://47.102.115.171:8888")
+	//account := requests.CreateNewSingleAccount("http://47.102.115.171:8888")
+	account := requests.CreateNewSingleAccount("http://localhost:8888")
 	//IP地址和端口
 
 	accountInfo := account.GetAccountsInfo()
@@ -22,6 +23,13 @@ func main() {
 	content, respbody := account.RetrieveFile(fileHash)
 	fmt.Println(string(content), respbody)
 	//获取文件
+
+	key := "this is key"
+	value := "this is value"
+	_, resp2 := account.StoreKV(key, value)
+	fmt.Println(resp2)
+	val, respbody2 := account.RetrieveKV(key)
+	fmt.Println(string(val), respbody2)
 
 	accountInfo = account.GetAccountsInfo()
 	fmt.Println(accountInfo)
