@@ -33,7 +33,7 @@ type FileRetrieveRequest struct {
 	Signature string `json:"signature"`
 }
 
-func (account *SingleAccount) StoreFile(contentBytes []byte) ([]byte, string) {
+func (account *SingleAccount) StoreFile(contentBytes []byte) ([]byte, string, string, int64) {
 	filehash := crypto.Keccak256(contentBytes)
 	filecontentbase64 := base64.StdEncoding.EncodeToString(contentBytes)
 
@@ -62,12 +62,14 @@ func (account *SingleAccount) StoreFile(contentBytes []byte) ([]byte, string) {
 	defer resp.Body.Close()
 	if error != nil {
 		fmt.Println(error)
-		return []byte(""), "wrong!"
+		return []byte(""), "wrong!", "", 0
 	} else {
 		fmt.Println("文件存储正常")
 		body, _ := io.ReadAll(resp.Body)
+		hashstr := gjson.GetBytes(body, "transaction.hash").String()
+		blockNumber := gjson.GetBytes(body, "ts").Int()
 		result := pretty.Pretty(body)
-		return filehash, string(result)
+		return filehash, string(result), hashstr, blockNumber
 	}
 }
 

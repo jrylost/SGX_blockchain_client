@@ -31,7 +31,7 @@ type KVRetrieveRequest struct {
 	Signature string `json:"signature"`
 }
 
-func (account *SingleAccount) StoreKV(key, value string) ([]byte, string) {
+func (account *SingleAccount) StoreKV(key, value string) ([]byte, string, int64) {
 	kvstorerequest := &KVStoreRequest{
 		Data: struct {
 			From  string `json:"from"`
@@ -57,15 +57,15 @@ func (account *SingleAccount) StoreKV(key, value string) ([]byte, string) {
 	defer resp.Body.Close()
 	if error != nil {
 		fmt.Println(error)
-		return []byte(""), "wrong!"
+		return []byte(""), "wrong!", 0
 	} else {
 		fmt.Println("kv存储正常")
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
-		res := gjson.GetBytes(body, "trasaction.hash")
-
-		return []byte(res.String()), string(result)
+		res := gjson.GetBytes(body, "transaction.hash")
+		blockNumber := gjson.GetBytes(body, "ts").Int()
+		return []byte(res.String()), string(result), blockNumber
 	}
 }
 

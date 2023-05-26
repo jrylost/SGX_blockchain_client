@@ -15,10 +15,13 @@ func main() {
 	fmt.Println(accountInfo)
 	//获取账户信息
 
-	fileHash, resp := account.StoreFile([]byte("File content is this!"))
+	fileHash, resp, filetxhash, fileBlockNumber := account.StoreFile([]byte("File content is this!"))
 	fmt.Println(utils.EncodeBytesToHexStringWith0x(fileHash))
 	fmt.Println(resp)
 	//存储文件
+
+	filetxinfo := account.GetTransactionInfo(filetxhash)
+	fmt.Println(filetxinfo)
 
 	content, respbody := account.RetrieveFile(fileHash)
 	fmt.Println(string(content), respbody)
@@ -26,12 +29,19 @@ func main() {
 
 	key := "this is key"
 	value := "this is value"
-	_, resp2 := account.StoreKV(key, value)
+	kvtxhash, resp2, KVBlockNumber := account.StoreKV(key, value)
 	fmt.Println(resp2)
 	val, respbody2 := account.RetrieveKV(key)
 	fmt.Println(string(val), respbody2)
 
+	kvtxinfo := account.GetTransactionInfo(string(kvtxhash))
+	fmt.Println(kvtxinfo)
+
 	accountInfo = account.GetAccountsInfo()
 	fmt.Println(accountInfo)
+
+	fileblock := account.GetBlockInfo(fileBlockNumber / 1000)
+	kvblock := account.GetBlockInfo(KVBlockNumber / 1000)
+	fmt.Println(fileblock, kvblock)
 
 }
