@@ -100,6 +100,7 @@ func (account *SingleAccount) RetrieveFile(fileHash []byte) ([]byte, string) {
 	} else {
 		fmt.Println("文件读取正常")
 		body, _ := io.ReadAll(resp.Body)
+		fmt.Println("bodyis here", string(body))
 		result := pretty.Pretty(body)
 
 		base64str := gjson.GetBytes(body, "transaction.content").String()

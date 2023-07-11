@@ -60,6 +60,25 @@ func TestSign(t *testing.T) {
 	}
 }
 
+func TestSign2(t *testing.T) {
+	k, err := NewKeyPair()
+	if err != nil {
+		t.Fatalf("generate key wrong!")
+	}
+
+	fmt.Println(utils.EncodeBytesToHexStringWith0x(k.PrivateKey.Serialize()))
+	fmt.Println(utils.EncodeBytesToHexStringWith0x(k.PublicKey.SerializeCompressed()))
+	fmt.Println(utils.EncodeBytesToHexStringWith0x(k.PublicKey.SerializeUncompressed()))
+	msg := [][]byte{[]byte("")}
+	//msg := "ce0677bb30baa8cf067c88db9811f4333d131bf8bcf12fe7065d211dce971008"
+	sig := k.SignMessage(msg...)
+	fmt.Println(hex.EncodeToString(sig))
+	b := VerifyMessageSignature(EthereumSignatureToDER(sig), k.PubK, msg...)
+	if !b {
+		t.Fatalf("wrong signature!")
+	}
+}
+
 func BenchmarkVerifyHashSignature(b *testing.B) {
 	sig := EthereumSignatureToDER(testsig)
 	for i := 0; i < b.N; i++ {

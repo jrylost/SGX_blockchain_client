@@ -26,11 +26,8 @@ type SingleAccount struct {
 	Url     string
 }
 
-func CreateNewSingleAccount(url string) *SingleAccount {
-	keypair, err := crypto.NewKeyPair()
-	if err != nil {
-		panic("Key generation wrong!")
-	}
+func CreateNewSingleAccount(url string, pk string) *SingleAccount {
+	keypair := crypto.Initialize(utils.DecodeHexStringToBytesWith0x(pk))
 
 	return &SingleAccount{Keypair: keypair, Url: url}
 }
@@ -42,7 +39,7 @@ func (account *SingleAccount) GetAccountsInfo() string {
 			Address string `json:"address"`
 			Ts      int64  `json:"ts"`
 		}{
-			Address: utils.EncodeBytesToHexStringWith0x(account.Keypair.PubK),
+			Address: utils.EncodeBytesToHexStringWith0x(account.Keypair.PublicKey.SerializeUncompressed()),
 			Ts:      time.Now().UnixMilli(),
 		},
 		Signature: "",

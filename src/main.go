@@ -1,16 +1,46 @@
 package main
 
 import (
+	"SGX_blockchain_client/src/crypto"
 	"SGX_blockchain_client/src/requests"
 	"SGX_blockchain_client/src/utils"
+	"encoding/hex"
 	"fmt"
+	"os"
 )
 
-func main() {
-	//account := requests.CreateNewSingleAccount("http://47.102.115.171:8888")
-	account := requests.CreateNewSingleAccount("http://localhost:8888")
-	//IP地址和端口
+var functionInput = `[
+    {
+        "input_name" : "context",
+        "input_type" : "context", 
+        "input_value" : ""
+    },
+    {
+        "input_name" : "data",
+        "input_type" : "string",
+        "input_value" : "{\"evidenceId\":\"bb\",\"uploaderSign\":\"cc\",\"content\":\"dd\"}"
+    }
+]`
 
+var functionInput2 = `[
+    {
+        "input_name" : "context",
+        "input_type" : "context", 
+        "input_value" : ""
+    },
+    {
+        "input_name" : "evidenceId",
+        "input_type" : "string",
+        "input_value" : "Evi_bb"
+    }
+]`
+
+func main() {
+	pk := "0x7b079a78348a4ed27b69f5c02ab4a944f61f117405d008a566a85ffbb4fce1d5"
+	account := requests.CreateNewSingleAccount("http://47.102.115.171:8888", pk)
+	//account := requests.CreateNewSingleAccount("http://localhost:8888", pk)
+	//IP地址和端口
+	fmt.Println(hex.EncodeToString(account.Keypair.PrivateKey.Serialize()))
 	accountInfo := account.GetAccountsInfo()
 	fmt.Println(accountInfo)
 	//获取账户信息
@@ -19,6 +49,10 @@ func main() {
 	fmt.Println(utils.EncodeBytesToHexStringWith0x(fileHash))
 	fmt.Println(resp)
 	//存储文件
+
+	//fmt.Println(hex.EncodeToString(account.Keypair.PrivateKey.Serialize()))
+	accountInfo = account.GetAccountsInfo()
+	fmt.Println(accountInfo)
 
 	filetxinfo := account.GetTransactionInfo(filetxhash)
 	fmt.Println(filetxinfo)
@@ -40,8 +74,33 @@ func main() {
 	accountInfo = account.GetAccountsInfo()
 	fmt.Println(accountInfo)
 
+	fileb, err := os.ReadFile(`src/example_contracts/evidence_v6/evidence_v6.go2`)
+	if err != nil {
+		fmt.Println(err)
+	}
+	abi, err := os.ReadFile(`src/example_contracts/evidence_v6/test_abi.json`)
+	if err != nil {
+		fmt.Println(err)
+	}
+	contracttxhash, contractrespstring, contractBlockNumber, contractaddress := account.DeployContract("evidence_v6", string(fileb), string(abi))
+	fmt.Println(string(contracttxhash), contractrespstring)
+
+	contracttxinfo := account.GetTransactionInfo(string(contracttxhash))
+	fmt.Println(contracttxinfo)
+
+	contractcodehash := utils.EncodeBytesToHexStringWith0x(crypto.Keccak256(fileb))
+
+	contracttxhash, contractrespstring, contractBlockNumber, resultstr := account.CallContract(contractcodehash, contractaddress, "AddEvidence", functionInput)
+	fmt.Println(resultstr)
+	fmt.Println(contractrespstring)
+
+	contracttxhash, contractrespstring, contractBlockNumber, resultstr = account.CallContract(contractcodehash, contractaddress, "QueryEvidenceById", functionInput2)
+	fmt.Println(resultstr)
+	fmt.Println(contractrespstring)
+
 	fileblock := account.GetBlockInfo(fileBlockNumber / 1000)
 	kvblock := account.GetBlockInfo(KVBlockNumber / 1000)
-	fmt.Println(fileblock, kvblock)
+	contractblock := account.GetBlockInfo(contractBlockNumber / 1000)
+	fmt.Println(fileblock, kvblock, contractblock)
 
 }

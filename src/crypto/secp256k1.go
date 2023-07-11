@@ -102,7 +102,7 @@ func (k *KeyPair) SignEthereumHash(hash []byte) []byte {
 		fmt.Println("Sign error")
 	}
 	//sig := ecdsa.Sign(k.PrivateKey, hash)
-	return append(sig, sig[0]-0x1c)[1:]
+	return append(sig, sig[0])[1:]
 }
 
 func (k *KeyPair) SignMessage(message ...[]byte) []byte {

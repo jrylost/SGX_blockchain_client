@@ -1,0 +1,105 @@
+{
+    "contract_name" : "evidence_v6",
+    "contract_info" : "This is contract evidence_v6",
+    "contract_functions" : [
+        {
+            "function_name" : "AddEvidence",
+            "function_inputs" : [
+                {
+                    "input_name" : "context",
+                    "input_type" : "context" 
+                },
+                {
+                    "input_name" : "data",
+                    "input_type" : "string" 
+                }
+            ],
+            "function_outputs" : [
+                {
+                    "output_name" : "CreateResult",
+                    "output_type" : "struct",
+                    "output_component" : [
+                        {
+                            "component_name" : "evidenceId",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "txId",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "txTimestamp",
+                            "component_type" : "string"
+                        }
+                    ] 
+                }
+            ]
+        },
+        {
+            "function_name" : "QueryEvidenceById",
+            "function_inputs" : [
+                {
+                    "input_name" : "context",
+                    "input_type" : "context" 
+                },
+                {
+                    "input_name" : "evidenceId",
+                    "input_type" : "string" 
+                }
+            ],
+            "function_outputs" : [
+                {
+                    "output_name" : "QueryResult",
+                    "output_type" : "struct",
+                    "output_component" : [
+                        {
+                            "component_name" : "key",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "record",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "bookmark",
+                            "component_type" : "string"
+                        }
+                    ] 
+                }
+            ]
+        },
+        {
+            "function_name" : "AddEvidence",
+            "function_inputs" : [
+                {
+                    "input_name" : "context",
+                    "input_type" : "context" 
+                },
+                {
+                    "input_name" : "txId",
+                    "input_type" : "string" 
+                }
+            ],
+            "function_outputs" : [
+                {
+                    "output_name" : "QueryResult",
+                    "output_type" : "struct",
+                    "output_component" : [
+                        {
+                            "component_name" : "key",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "record",
+                            "component_type" : "string"
+                        },
+                        {
+                            "component_name" : "bookmark",
+                            "component_type" : "string"
+                        }
+                    ] 
+                }
+            ]
+        }
+    ]
+}

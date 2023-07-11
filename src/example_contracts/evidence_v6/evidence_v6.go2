@@ -1,0 +1,92 @@
+package evidence_v6
+
+import (
+	"encoding/json"
+	"ContractContext"
+)
+
+type Error struct {
+message string
+payload string
+}
+
+type EvidenceInfo struct {
+EvidenceId   string `json:"evidenceId"`
+UploaderSign string `json:"uploaderSign"`
+EvidenceTxId string `json:"evidenceTxId"`
+Content      string `json:"content"`
+}
+
+type CreateResult struct {
+EvidenceId  string `json:"evidenceId,omitempty"`
+TxId        string `json:"txId,omitempty"`
+TxTimestamp string `json:"txTimestamp,omitempty"`
+}
+
+type QueryResult struct {
+Key      string `json:"key,omitempty"`
+Record   string `json:"record,omitempty"`
+Bookmark string `json:"bookmark,omitempty"`
+}
+
+func AddEvidence(context *ContractContext.Context, data string) *CreateResult {
+evidenceinfo := &EvidenceInfo{}
+err := json.Unmarshal([]byte(data), evidenceinfo)
+stub := context.Getstub()
+key := FormatEvidenceKey(evidenceinfo.EvidenceId)
+_, err = stub.GetStringState(key)
+if err != nil {
+panic(Error{
+message: "Evidence " + evidenceinfo.EvidenceId + " already exists",
+payload: "EVIDENCE_ALREADY_EXIST",
+})
+
+}
+txId := stub.GetTxId()
+timeStamp := stub.GetTxTimestamp()
+evidenceinfo.EvidenceTxId = txId
+evidenceState, _ := json.Marshal(evidenceinfo)
+stub.PutStringState(key, string(evidenceState))
+return &CreateResult{
+EvidenceId:  evidenceinfo.EvidenceId,
+TxId:        txId,
+TxTimestamp: timeStamp,
+}
+}
+
+func QueryEvidenceById(context *ContractContext.Context, evidenceId string) *QueryResult {
+stub := context.Getstub()
+evidenceState, err := stub.GetStringState(evidenceId)
+if err != nil {
+panic(Error{
+message: evidenceId,
+payload: "NO_EVIDENCE_FOUND",
+})
+}
+return &QueryResult{
+Key:      evidenceId,
+Record:   evidenceState,
+Bookmark: "",
+}
+}
+
+func QueryEvidenceByTxId(context *ContractContext.Context, txId string) *QueryResult {
+stub := context.Getstub()
+query, _ := json.Marshal(struct {
+Selector string `json:"selector"`
+}{Selector: txId})
+evidenceState, _ := json.Marshal(stub.GetQueryResult(string(query)))
+return &QueryResult{
+Key:      txId,
+Record:   string(evidenceState),
+Bookmark: "",
+}
+
+}
+
+func FormatEvidenceKey(evidenceId string) string {
+return "Evi_" + evidenceId
+}
+
+
+

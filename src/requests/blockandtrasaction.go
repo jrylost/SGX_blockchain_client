@@ -81,7 +81,7 @@ func (account *SingleAccount) GetTransactionInfo(hash string) string {
 	}
 
 	buffer := bytes.NewBuffer(bodyBytes)
-
+	fmt.Println(string(bodyBytes))
 	resp, err := http.Post(account.Url+"/transaction/info", jsonContentType, buffer)
 
 	if err != nil {
@@ -90,6 +90,7 @@ func (account *SingleAccount) GetTransactionInfo(hash string) string {
 	} else {
 		fmt.Println("交易信息读取正常")
 		body, _ := io.ReadAll(resp.Body)
+		fmt.Println(string(body))
 		result := pretty.Pretty(body)
 
 		return string(result)
