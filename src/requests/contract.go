@@ -48,14 +48,14 @@ type ContractDeployRequest struct {
 }
 
 type ContractDeployResponse struct {
-	Status      string `json:"status"`
-	Transaction struct {
+	Status string `json:"status"`
+	Data   struct {
 		From            string `json:"from"`
 		Hash            string `json:"hash"`
 		ContractAddress string `json:"contractAddress"`
 		Nonce           int64  `json:"nonce"`
 		CodeHash        string `json:"codeHash"`
-	} `json:"transaction"`
+	} `json:"data"`
 	Ts int64 `json:"ts"`
 }
 
@@ -72,14 +72,14 @@ type ContractCallRequest struct {
 }
 
 type ContractCallResponse struct {
-	Status      string `json:"status"`
-	Transaction struct {
+	Status string `json:"status"`
+	Data   struct {
 		CodeHash string      `json:"codeHash"`
 		From     string      `json:"from"`
 		Hash     string      `json:"hash"`
 		Nonce    int         `json:"nonce"`
 		Result   interface{} `json:"result"`
-	} `json:"transaction"`
+	} `json:"data"`
 	Ts int64 `json:"ts"`
 }
 
@@ -121,8 +121,8 @@ func (account *SingleAccount) DeployContract(name, code, abi string) ([]byte, st
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
-		res := gjson.GetBytes(body, "transaction.hash")
-		contractaddress := gjson.GetBytes(body, "transaction.contractAddress").String()
+		res := gjson.GetBytes(body, "data.hash")
+		contractaddress := gjson.GetBytes(body, "data.contractAddress").String()
 		blockNumber := gjson.GetBytes(body, "ts").Int()
 		return []byte(res.String()), string(result), blockNumber, contractaddress
 	}
@@ -165,8 +165,8 @@ func (account *SingleAccount) CallContract(codeHash, contractAddress, functionNa
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
-		res := gjson.GetBytes(body, "transaction.hash")
-		resultstr := gjson.GetBytes(body, "transaction.result").String()
+		res := gjson.GetBytes(body, "data.hash")
+		resultstr := gjson.GetBytes(body, "data.result").String()
 
 		blockNumber := gjson.GetBytes(body, "ts").Int()
 		return []byte(res.String()), string(result), blockNumber, resultstr

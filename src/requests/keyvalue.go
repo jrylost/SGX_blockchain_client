@@ -63,7 +63,7 @@ func (account *SingleAccount) StoreKV(key, value string) ([]byte, string, int64)
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
-		res := gjson.GetBytes(body, "transaction.hash")
+		res := gjson.GetBytes(body, "data.hash")
 		blockNumber := gjson.GetBytes(body, "ts").Int()
 		return []byte(res.String()), string(result), blockNumber
 	}
@@ -98,7 +98,7 @@ func (account *SingleAccount) RetrieveKV(key string) ([]byte, string) {
 		body, _ := io.ReadAll(resp.Body)
 		result := pretty.Pretty(body)
 
-		rawstr := gjson.GetBytes(body, "transaction.value").String()
+		rawstr := gjson.GetBytes(body, "data.value").String()
 
 		return []byte(rawstr), string(result)
 	}

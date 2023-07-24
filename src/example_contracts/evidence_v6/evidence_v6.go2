@@ -35,7 +35,7 @@ err := json.Unmarshal([]byte(data), evidenceinfo)
 stub := context.Getstub()
 key := FormatEvidenceKey(evidenceinfo.EvidenceId)
 _, err = stub.GetStringState(key)
-if err != nil {
+if err == nil {
 panic(Error{
 message: "Evidence " + evidenceinfo.EvidenceId + " already exists",
 payload: "EVIDENCE_ALREADY_EXIST",
