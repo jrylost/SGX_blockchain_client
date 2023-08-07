@@ -59,7 +59,7 @@ func (account *SingleAccount) StoreKV(key, value string) ([]byte, string, int64)
 		fmt.Println(error)
 		return []byte(""), "wrong!", 0
 	} else {
-		fmt.Println("kv存储正常")
+		//fmt.Println("kv存储正常")
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
@@ -94,7 +94,7 @@ func (account *SingleAccount) RetrieveKV(key string) ([]byte, string) {
 		fmt.Println(error)
 		return []byte(""), "wrong!"
 	} else {
-		fmt.Println("kv读取正常")
+		//fmt.Println("kv读取正常")
 		body, _ := io.ReadAll(resp.Body)
 		result := pretty.Pretty(body)
 

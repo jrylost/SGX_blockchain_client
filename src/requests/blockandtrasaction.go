@@ -52,7 +52,7 @@ func (account *SingleAccount) GetBlockInfo(number int64) string {
 		fmt.Println(err)
 		return "Wrong!"
 	} else {
-		fmt.Println("区块信息读取正常")
+		//fmt.Println("区块信息读取正常")
 		body, _ := io.ReadAll(resp.Body)
 		result := pretty.Pretty(body)
 
@@ -81,16 +81,16 @@ func (account *SingleAccount) GetTransactionInfo(hash string) string {
 	}
 
 	buffer := bytes.NewBuffer(bodyBytes)
-	fmt.Println(string(bodyBytes))
+	//fmt.Println(string(bodyBytes))
 	resp, err := http.Post(account.Url+"/transaction/info", jsonContentType, buffer)
 
 	if err != nil {
 		fmt.Println(err)
 		return "Wrong!"
 	} else {
-		fmt.Println("交易信息读取正常")
+		//fmt.Println("交易信息读取正常")
 		body, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(body))
+		//fmt.Println(string(body))
 		result := pretty.Pretty(body)
 
 		return string(result)
@@ -98,3 +98,22 @@ func (account *SingleAccount) GetTransactionInfo(hash string) string {
 	defer resp.Body.Close()
 	return ""
 }
+
+//func (account *SingleAccount) Storetxinfo() string {
+//	fmt.Println("生成交易请求:")
+//	randomhash := []byte{}
+//	for i := 0; i < 10000; i++ {
+//		rand.Read(randomhash)
+//		transactioninfoRequest := &TransactionInfoRequest{
+//			Data: struct {
+//				Hash string `json:"hash"`
+//				Ts   int64  `json:"ts"`
+//			}{
+//				Hash: ,
+//				Ts:   time.Now().UnixMilli(),
+//			},
+//			Signature: "",
+//		}
+//
+//	}
+//}

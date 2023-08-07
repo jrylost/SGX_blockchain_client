@@ -64,7 +64,7 @@ func (account *SingleAccount) StoreFile(contentBytes []byte) ([]byte, string, st
 		fmt.Println(error)
 		return []byte(""), "wrong!", "", 0
 	} else {
-		fmt.Println("文件存储正常")
+		//fmt.Println("文件存储正常")
 		body, _ := io.ReadAll(resp.Body)
 		hashstr := gjson.GetBytes(body, "data.hash").String()
 		blockNumber := gjson.GetBytes(body, "ts").Int()
@@ -98,9 +98,9 @@ func (account *SingleAccount) RetrieveFile(fileHash []byte) ([]byte, string) {
 		fmt.Println(error)
 		return []byte(""), "wrong!"
 	} else {
-		fmt.Println("文件读取正常")
+		//fmt.Println("文件读取正常")
 		body, _ := io.ReadAll(resp.Body)
-		fmt.Println("bodyis here", string(body))
+		//fmt.Println("body is here", string(body))
 		result := pretty.Pretty(body)
 
 		base64str := gjson.GetBytes(body, "data.content").String()

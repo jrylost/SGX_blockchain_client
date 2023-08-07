@@ -58,7 +58,7 @@ func (account *SingleAccount) GetAccountsInfo() string {
 		fmt.Println(err)
 		return "Wrong!"
 	} else {
-		fmt.Println("账户信息读取正常")
+		//fmt.Println("账户信息读取正常")
 		body, _ := io.ReadAll(resp.Body)
 		result := pretty.Pretty(body)
 

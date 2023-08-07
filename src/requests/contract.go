@@ -109,7 +109,7 @@ func (account *SingleAccount) DeployContract(name, code, abi string) ([]byte, st
 		fmt.Println("error in signing json!")
 	}
 	buffer := bytes.NewBuffer(bodyBytes)
-	fmt.Println("合约depoly")
+	//fmt.Println("合约depoly")
 	fmt.Println(string(bodyBytes))
 	resp, error := http.Post(account.Url+"/contract/deploy", jsonContentType, buffer)
 	defer resp.Body.Close()
@@ -117,7 +117,7 @@ func (account *SingleAccount) DeployContract(name, code, abi string) ([]byte, st
 		fmt.Println(error)
 		return []byte(""), "wrong!", 0, ""
 	} else {
-		fmt.Println("合约部署正常")
+		//fmt.Println("合约部署正常")
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
@@ -161,7 +161,7 @@ func (account *SingleAccount) CallContract(codeHash, contractAddress, functionNa
 		fmt.Println(error)
 		return []byte(""), "wrong!", 0, ""
 	} else {
-		fmt.Println("合约调用正常")
+		//fmt.Println("合约调用正常")
 		body, _ := io.ReadAll(resp.Body)
 		//fmt.Println(body)
 		result := pretty.Pretty(body)
