@@ -123,7 +123,7 @@ func (account *SingleAccount) Storetxinfo() {
 	}
 	t2 := time.Now()
 	fmt.Println("耗时：", t2.Sub(t1))
-	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds())
+	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds(), "TPS")
 }
 
 func (account *SingleAccount) Storecontextinfo() {
@@ -150,5 +150,5 @@ func (account *SingleAccount) Storecontextinfo() {
 	}
 	t2 := time.Now()
 	fmt.Println("耗时：", t2.Sub(t1))
-	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds())
+	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds(), "TPS")
 }

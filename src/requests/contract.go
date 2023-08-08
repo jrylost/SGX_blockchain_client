@@ -204,5 +204,5 @@ func (account *SingleAccount) Storeexecutecontract(codeHash, contractAddress, fu
 	t2 := time.Now()
 	du := t2.Sub(t1)
 	fmt.Println("耗时：", du)
-	fmt.Println("性能：", 50000/du.Seconds())
+	fmt.Println("性能：", 50000/du.Seconds(), "TPS")
 }
