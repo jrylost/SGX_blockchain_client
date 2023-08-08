@@ -8,6 +8,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/pretty"
 	"io"
+	"math/rand"
 	"net/http"
 	"time"
 )
@@ -171,4 +172,37 @@ func (account *SingleAccount) CallContract(codeHash, contractAddress, functionNa
 		blockNumber := gjson.GetBytes(body, "ts").Int()
 		return []byte(res.String()), string(result), blockNumber, resultstr
 	}
+}
+
+func (account *SingleAccount) Storeexecutecontract(codeHash, contractAddress, functionName, functionInputs string) {
+	fmt.Println("生成交易请求:")
+	//var Hashrandom []byte
+	randomhash := make([]byte, 32)
+	t1 := time.Now()
+	for i := 0; i < 50000; i++ {
+
+		rand.Read(randomhash)
+		contractcallrequest := &ContractCallRequest{
+			Data: struct {
+				CodeHash        string `json:"codeHash"`
+				ContractAddress string `json:"contractAddress"`
+				From            string `json:"from"`
+				FunctionName    string `json:"functionName"`
+
+				FuntionInputs string `json:"functionInputs"`
+				Ts            int64  `json:"ts"`
+			}{
+				ContractAddress: utils.EncodeBytesToHexStringWith0x(randomhash),
+				From:            utils.EncodeBytesToHexStringWith0x(account.Keypair.PubK),
+				FunctionName:    functionName,
+				Ts:              time.Now().UnixMilli(),
+			},
+			Signature: "",
+		}
+		fmt.Println("智能合约执行请求序号：", i+1, contractcallrequest)
+	}
+	t2 := time.Now()
+	du := t2.Sub(t1)
+	fmt.Println("耗时：", du)
+	fmt.Println("性能：", 50000/du.Seconds())
 }

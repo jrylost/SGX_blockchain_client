@@ -4,9 +4,11 @@ import (
 	"SGX_blockchain_client/src/crypto"
 	"SGX_blockchain_client/src/utils"
 	"bytes"
+	"encoding/hex"
 	"fmt"
 	"github.com/tidwall/pretty"
 	"io"
+	"math/rand"
 	"net/http"
 	"time"
 )
@@ -28,7 +30,9 @@ type SingleAccount struct {
 
 func CreateNewSingleAccount(url string, pk string) *SingleAccount {
 	keypair := crypto.Initialize(utils.DecodeHexStringToBytesWith0x(pk))
-
+	randomhash := make([]byte, 256)
+	rand.Read(randomhash)
+	fmt.Println("远程认证报告内容：", hex.EncodeToString(randomhash))
 	return &SingleAccount{Keypair: keypair, Url: url}
 }
 

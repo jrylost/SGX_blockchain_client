@@ -4,6 +4,7 @@ import (
 	"SGX_blockchain_client/src/crypto"
 	"SGX_blockchain_client/src/requests"
 	"SGX_blockchain_client/src/utils"
+	"bufio"
 	"encoding/hex"
 	"fmt"
 	"os"
@@ -59,11 +60,11 @@ func main() {
 	fmt.Println(resp)
 	//存储文件
 	fmt.Println("测试查询区块大小、查询区块交易数量、查询区块生成时间：")
-	accountblock := account.GetBlockInfo(fileBlockNumber / 1000)
+	BlockInfo := account.GetBlockInfo(fileBlockNumber / 1000)
 	//fmt.Println(hex.EncodeToString(account.Keypair.PrivateKey.Serialize()))
 	//fmt.Println("下面账户交易信息查询：")
 	//accountInfo = account.GetAccountsInfo()
-	//fmt.Println(accountInfo)
+	fmt.Println(BlockInfo)
 	fmt.Println("下面测试交易信息查询：")
 	fmt.Println("测试交易事务凭据、交易事务类型、交易事务对手方：")
 	filetxinfo := account.GetTransactionInfo(filetxhash)
@@ -126,26 +127,26 @@ func main() {
 	fmt.Println(contractrespstring)
 
 	fmt.Println("获取账户内交易、文件、智能合约列表：")
-	accountblock = account.GetBlockInfo(fileBlockNumber / 1000)
+	accountblock := account.GetBlockInfo(fileBlockNumber / 1000)
 	//kvblock := account.GetBlockInfo(KVBlockNumber / 1000)
 	//contractblock := account.GetBlockInfo(contractBlockNumber / 1000)
 	fmt.Println(accountblock)
-	//fmt.Println("下面测试存储交易事务信息性能：")
-	//reader := bufio.NewReader(os.Stdin)
-	//reader.ReadRune()
-	//account.Storetxinfo()
-	//fmt.Println("下面测试存取智能合约context性能：")
-	//reader = bufio.NewReader(os.Stdin)
-	//reader.ReadRune()
-	//account.Storecontextinfo()
-	//fmt.Println("下面测试执行智能合约执行性能：")
-	//reader = bufio.NewReader(os.Stdin)
-	//reader.ReadRune()
-	//account.Storeexecutecontract()
-	//reader = bufio.NewReader(os.Stdin)
-	//reader.ReadRune()
+	fmt.Println("下面测试存储交易事务信息性能：")
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadRune()
+	account.Storetxinfo()
+	fmt.Println("下面测试存取智能合约context性能：")
+	reader = bufio.NewReader(os.Stdin)
+	reader.ReadRune()
+	account.Storecontextinfo()
+	fmt.Println("下面测试执行智能合约执行性能：")
+	reader = bufio.NewReader(os.Stdin)
+	reader.ReadRune()
+	account.Storeexecutecontract(contractcodehash, contractaddress, "AddEvidence", functionInput)
+	reader = bufio.NewReader(os.Stdin)
+	reader.ReadRune()
 
 	fmt.Println("测试退出分布式网络：")
-	//reader = bufio.NewReader(os.Stdin)
-	//reader.ReadRune()
+	reader = bufio.NewReader(os.Stdin)
+	reader.ReadRune()
 }

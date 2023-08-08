@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/tidwall/pretty"
 	"io"
+	"math/rand"
 	"net/http"
 	"time"
 )
@@ -99,21 +100,55 @@ func (account *SingleAccount) GetTransactionInfo(hash string) string {
 	return ""
 }
 
-//func (account *SingleAccount) Storetxinfo() string {
-//	fmt.Println("生成交易请求:")
-//	randomhash := []byte{}
-//	for i := 0; i < 10000; i++ {
-//		rand.Read(randomhash)
-//		transactioninfoRequest := &TransactionInfoRequest{
-//			Data: struct {
-//				Hash string `json:"hash"`
-//				Ts   int64  `json:"ts"`
-//			}{
-//				Hash: ,
-//				Ts:   time.Now().UnixMilli(),
-//			},
-//			Signature: "",
-//		}
-//
-//	}
-//}
+func (account *SingleAccount) Storetxinfo() {
+	fmt.Println("生成交易请求:")
+	//var Hashrandom []byte
+	randomhash := make([]byte, 32)
+	t1 := time.Now()
+	ttt := time.Now().UnixMilli()
+	for i := 0; i < 100000; i++ {
+
+		rand.Read(randomhash)
+		transactioninfoRequest := &TransactionInfoRequest{
+			Data: struct {
+				Hash string `json:"hash"`
+				Ts   int64  `json:"ts"`
+			}{
+				Hash: utils.EncodeBytesToHexStringWith0x(randomhash),
+				Ts:   ttt,
+			},
+			Signature: "",
+		}
+		fmt.Println("交易查询请求序号：", i+1, transactioninfoRequest)
+	}
+	t2 := time.Now()
+	fmt.Println("耗时：", t2.Sub(t1))
+	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds())
+}
+
+func (account *SingleAccount) Storecontextinfo() {
+	fmt.Println("生成交易请求:")
+	//var Hashrandom []byte
+	randomhash := make([]byte, 32)
+	t1 := time.Now()
+	ttt := time.Now().UnixMilli()
+
+	for i := 0; i < 100000; i++ {
+
+		rand.Read(randomhash)
+		transactioninfoRequest := &TransactionInfoRequest{
+			Data: struct {
+				Hash string `json:"hash"`
+				Ts   int64  `json:"ts"`
+			}{
+				Hash: utils.EncodeBytesToHexStringWith0x(randomhash),
+				Ts:   ttt,
+			},
+			Signature: "",
+		}
+		fmt.Println("context存储请求序号：", i+1, transactioninfoRequest)
+	}
+	t2 := time.Now()
+	fmt.Println("耗时：", t2.Sub(t1))
+	fmt.Println("性能：", 100000/t2.Sub(t1).Seconds())
+}
